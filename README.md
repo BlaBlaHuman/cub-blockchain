@@ -19,8 +19,7 @@ keygen						Generate a key pair for the algorithm
 	--key_size BITS				1024 by default
 	
 	-pubf FILE_NAME,			[OPTIONAL] Name of the file to write the public key to,
-						the key is written in the console by default
-	--public_key_file FILE_NAME
+	--public_key_file FILE_NAME		the key is written in the console by default
 	
 	-privf FILE_NAME,			[OPTIONAL] Name of the file to write the private key to,
 	--private_key_file FILE_NAME 		the key is written in the console by default
