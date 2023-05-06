@@ -19,6 +19,11 @@ contract ETH_exchange {
         _;
     }
 
+    modifier tokenSupported(IERC20 _token) {
+        require(allowedTokens[_token], "This token is not supported");
+        _;
+    }
+
     function allowToken(address _token) onlyOwner external {
         allowedTokens[IERC20(_token)] = true;
     }
@@ -27,13 +32,11 @@ contract ETH_exchange {
         return allowedTokens[IERC20(_token)];
     }
 
-    function getExchangeRate(address _token) external view returns (uint) {
-        require(allowedTokens[IERC20(_token)], "This token is not supported");
+    function getExchangeRate(address _token) tokenSupported(IERC20(_token)) external view returns (uint) {
         return exchangeRate[IERC20(_token)];
     }
 
-    function getTokenBalance(address _token) external view returns (uint) {
-        require(allowedTokens[IERC20(_token)], "This token is not supported");
+    function getTokenBalance(address _token) tokenSupported(IERC20(_token)) external view returns (uint) {
         return IERC20(_token).balanceOf(address(this));
     }
 
@@ -41,21 +44,18 @@ contract ETH_exchange {
         return payable(address(this)).balance;
     }
 
-    function changeExchangeRate(address _token, uint _amount) onlyOwner external {
-        require(allowedTokens[IERC20(_token)], "This token is not supported");
+    function changeExchangeRate(address _token, uint _amount) onlyOwner tokenSupported(IERC20(_token)) external {
         exchangeRate[IERC20(_token)] = _amount;
     }
 
-    function sellToken(address _token, uint _amount) public {
+    function sellToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external {
         require(_amount > 0, "You are trying to send 0 tokens");
-        require(allowedTokens[IERC20(_token)], "This token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transaction was not successful");
         require(payable(msg.sender).send(exchangeRate[IERC20(_token)] * _amount), "Transaction was not successful");
     }
 
-    function buyToken(address _token, uint _amount) public payable {
+    function buyToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external payable {
         require(_amount > 0, "You are trying to buy 0 tokens");
-        require(allowedTokens[IERC20(_token)], "This token is not supported");
         require(exchangeRate[IERC20(_token)] * _amount >= msg.value);
         require(IERC20(_token).transferFrom(address(this), msg.sender, _amount), "Transaction was not successful");
     }
