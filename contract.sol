@@ -32,9 +32,13 @@ contract ETH_exchange {
         return exchangeRate[IERC20(_token)];
     }
 
-    function getBalance(address _token) external view returns (uint) {
+    function getTokenBalance(address _token) external view returns (uint) {
         require(allowedTokens[IERC20(_token)], "This token is not supported");
         return IERC20(_token).balanceOf(address(this));
+    }
+
+    function getETHBalance() external view returns (uint) {
+        return payable(address(this)).balance;
     }
 
     function changeExchangeRate(address _token, uint _amount) onlyOwner external {
