@@ -14,8 +14,12 @@ contract ETH_exchange {
         require(msg.value > 0, "Initial amount must be greater than zero"); 
     }
 
-    function allowToken(address _token) external {
-        require(msg.sender == owner, "Only the contract owner can allow tokenns");
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the contract owner can perform this operation");
+        _;
+    }
+
+    function allowToken(address _token) onlyOwner external {
         allowedTokens[IERC20(_token)] = true;
     }
 
@@ -33,9 +37,7 @@ contract ETH_exchange {
         return IERC20(_token).balanceOf(address(this));
     }
 
-
-    function changeExchangeRate(address _token, uint _amount) external {
-        require(msg.sender == owner, "Only the contract owner can set the exchange rate");
+    function changeExchangeRate(address _token, uint _amount) onlyOwner external {
         require(allowedTokens[IERC20(_token)], "This token is not supported");
         exchangeRate[IERC20(_token)] = _amount;
     }
