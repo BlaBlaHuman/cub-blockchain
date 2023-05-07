@@ -7,8 +7,16 @@ contract ETH_exchange {
 
     address private owner;
     mapping(IERC20 => bool) private allowedTokens;
+
+    /*
+        exchangeRate represents costs of different tokens in wei
+    */
     mapping (IERC20 => uint) private exchangeRate;
 
+
+    /*
+        constructor() requires some initial wei amount to be able to buy tokens
+    */
     constructor() payable {
         owner = msg.sender;
         require(msg.value > 0, "Initial amount must be greater than zero"); 
@@ -42,7 +50,12 @@ contract ETH_exchange {
 
     function sellToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external {
         require(_amount > 0, "You are trying to sell 0 tokens");
+        
+        /*
+            To sell tokens user has to allow the contract to spend tokens from their balance
+        */
         require(IERC20(_token).allowance(msg.sender, address(this)) >= _amount, "The contract cannot spend the defined amount of tokens from the caller's balance");
+        
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transaction was not successful");
         require(payable(msg.sender).send(exchangeRate[IERC20(_token)] * _amount), "Transaction was not successful");
     }
