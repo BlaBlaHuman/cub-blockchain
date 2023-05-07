@@ -47,9 +47,7 @@ contract ETH_exchange {
         require(payable(msg.sender).send(exchangeRate[IERC20(_token)] * _amount), "Transaction was not successful");
     }
 
-    function buyToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external payable {
-        require(_amount > 0, "You are trying to buy 0 tokens");
-        require(exchangeRate[IERC20(_token)] * _amount >= msg.value);
-        require(IERC20(_token).transferFrom(address(this), msg.sender, _amount), "Transaction was not successful");
+    function buyToken(address _token) tokenSupported(IERC20(_token)) external payable {
+        require(IERC20(_token).transferFrom(address(this), msg.sender, msg.value / exchangeRate[IERC20(_token)]), "Transaction was not successful");
     }
 }
