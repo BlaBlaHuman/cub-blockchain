@@ -3,4 +3,4 @@
 ### Features 
 
 * Allows to exchange any ERC-20 tokens for ETH and vice versa
-* Allows the owner to add new tokens and change exchange rates
+* Allows the owner to add new tokens, change exchange rates and deposit wei

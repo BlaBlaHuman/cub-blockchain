@@ -48,6 +48,8 @@ contract ETH_exchange {
         exchangeRate[IERC20(_token)] = _amount;
     }
 
+    function deposit() external payable {}
+
     function sellToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external {
         require(_amount > 0, "Selling 0 tokens is not allowed");
         
@@ -82,4 +84,5 @@ contract ETH_exchange {
         }
 
     }
+    
 }
