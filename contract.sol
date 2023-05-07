@@ -36,14 +36,6 @@ contract ETH_exchange {
         return exchangeRate[IERC20(_token)];
     }
 
-    function getTokenBalance(address _token) tokenSupported(IERC20(_token)) external view returns (uint) {
-        return IERC20(_token).balanceOf(address(this));
-    }
-
-    function getETHBalance() external view returns (uint) {
-        return payable(address(this)).balance;
-    }
-
     function changeExchangeRate(address _token, uint _amount) onlyOwner tokenSupported(IERC20(_token)) external {
         exchangeRate[IERC20(_token)] = _amount;
     }
