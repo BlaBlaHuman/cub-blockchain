@@ -50,6 +50,7 @@ contract ETH_exchange {
 
     function sellToken(address _token, uint _amount) tokenSupported(IERC20(_token)) external {
         require(_amount > 0, "You are trying to send 0 tokens");
+        require(IERC20(_token).allowance(msg.sender, address(this)) >= _amount, "The contract cannot spend the defined amount of tokens from the caller's balance");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transaction was not successful");
         require(payable(msg.sender).send(exchangeRate[IERC20(_token)] * _amount), "Transaction was not successful");
     }
