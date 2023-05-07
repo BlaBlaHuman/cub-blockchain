@@ -36,6 +36,10 @@ contract ETH_exchange {
         allowedTokens[IERC20(_token)] = true;
     }
 
+    function removeToken(address _token) onlyOwner external {
+        allowedTokens[IERC20(_token)] = false;
+    }
+
     function isAllowed(address _token) external view returns (bool) {
         return allowedTokens[IERC20(_token)];
     }
